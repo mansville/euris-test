@@ -27,9 +27,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: 21
           distribution: temurin
@@ -39,7 +39,7 @@ jobs:
       - name: Jar
         run: ./mvnw clean package
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: artifact
           path: target/app.jar
@@ -52,7 +52,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Tag
@@ -61,7 +61,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Download
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: artifact
           path: target
