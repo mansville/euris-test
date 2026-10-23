@@ -9,7 +9,6 @@
     </parent>
     <groupId>it.mansville</groupId>
     <artifactId>euris-test</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>euris-test</name>
     <description>euris-test</description>
     <properties>
@@ -84,5 +83,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>app</finalName>
     </build>
 </project>
