@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrdineRepository extends JpaRepository<Ordine, Integer> {
-    Page<Ordine> findByClienteId(Integer clienteId, Pageable pageable);
+    Page<Ordine> findByClienteCodiceFiscale(String clienteCodiceFiscale, Pageable pageable);
 
-    Page<Ordine> findByClienteIdAndStato(Integer clienteId, StatoOrdine stato, Pageable pageable);
+    Page<Ordine> findByClienteCodiceFiscaleAndStato(String clienteCodiceFiscale, StatoOrdine stato, Pageable pageable);
 
     int countByStato(StatoOrdine stato);
 }
