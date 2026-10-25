@@ -25,6 +25,6 @@ public class DettaglioOrdine {
     @JoinColumn(name = "ID_PRODOTTO")
     private Prodotto prodotto;
 
-    @Column(name = "QUANTITÀ")
+    @Column(name = "QUANTITA")
     private Integer quantita;
 }
