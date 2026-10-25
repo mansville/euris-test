@@ -32,6 +32,6 @@ public class Prodotto {
     private Integer stock;
 
     @LastModifiedDate
-    @Column(name = "UPDATED_AT")
-    private LocalDateTime updatedAt;
+    @Column(name = "DATA_MODIFICA")
+    private LocalDateTime dataModifica;
 }

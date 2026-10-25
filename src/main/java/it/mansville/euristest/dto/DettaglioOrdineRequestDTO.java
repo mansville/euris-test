@@ -1,0 +1,14 @@
+package it.mansville.euristest.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
+public record DettaglioOrdineRequestDTO(
+        @NotBlank
+        String codice,
+
+        @NotNull
+        @Positive
+        Integer quantita
+) {}
