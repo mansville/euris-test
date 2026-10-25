@@ -14,7 +14,7 @@ import lombok.Setter;
 public class DettaglioOrdine {
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
@@ -25,6 +25,6 @@ public class DettaglioOrdine {
     @JoinColumn(name = "ID_PRODOTTO")
     private Prodotto prodotto;
 
-    @Column(name = "QUANTITÀ")
+    @Column(name = "QUANTITA")
     private Integer quantita;
 }
