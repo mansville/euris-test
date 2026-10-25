@@ -42,12 +42,12 @@ public class Ordine {
     private StatoOrdine stato = StatoOrdine.ORDINATO;
 
     @CreatedDate
-    @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    @Column(name = "DATA_CREAZIONE")
+    private LocalDateTime dataCreazione;
 
     @LastModifiedDate
-    @Column(name = "UPDATED_AT")
-    private LocalDateTime updatedAt;
+    @Column(name = "DATA_MODIFICA")
+    private LocalDateTime dataModifica;
 
     public void addDettaglio(DettaglioOrdine dettaglio) {
         dettaglio.setOrdine(this);
