@@ -15,3 +15,8 @@ spring:
       maximum-pool-size: 10
       idle-timeout: 300000
       connection-timeout: 20000
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
