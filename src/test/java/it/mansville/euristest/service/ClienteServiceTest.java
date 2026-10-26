@@ -25,36 +25,27 @@ class ClienteServiceTest {
     private ClienteService clienteService;
 
     @Test
-    void testCreate() {
+    void testCreateAndFind() {
         var cliente = new Cliente();
+        cliente.setId(1);
         cliente.setNome("Manuel");
         cliente.setCognome("Nucci");
         cliente.setDataNascita(LocalDate.of(1993, 12, 26));
         cliente.setCodiceFiscale("NCCMNL93T26A944D");
         cliente.setEmail("manuel.nucci.52@gmail.com");
 
+        when(clienteRepository.existsByCodiceFiscale("NCCMNL93T26A944D")).thenReturn(false);
+        when(clienteRepository.existsByEmail("manuel.nucci.52@gmail.com")).thenReturn(false);
         when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
-
         var clienteSaved = clienteService.crea(cliente);
         assertThat(clienteSaved).isNotNull();
-
+        verify(clienteRepository).existsByCodiceFiscale("NCCMNL93T26A944D");
+        verify(clienteRepository).existsByEmail("manuel.nucci.52@gmail.com");
         verify(clienteRepository).save(cliente);
-    }
-
-    @Test
-    void testFind() {
-        var cliente = new Cliente();
-        cliente.setNome("Manuel");
-        cliente.setCognome("Nucci");
-        cliente.setDataNascita(LocalDate.of(1993, 12, 26));
-        cliente.setCodiceFiscale("NCCMNL93T26A944D");
-        cliente.setEmail("manuel.nucci.52@gmail.com");
 
         when(clienteRepository.findByCodiceFiscale("NCCMNL93T26A944D")).thenReturn(Optional.of(cliente));
-
         var clientePerCodiceFiscale = clienteService.cercaPerCodiceFiscale("NCCMNL93T26A944D");
         assertThat(clientePerCodiceFiscale).isNotNull();
-
         verify(clienteRepository).findByCodiceFiscale("NCCMNL93T26A944D");
     }
 }

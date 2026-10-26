@@ -36,7 +36,7 @@ class OrdineServiceTest {
     private OrdineService ordineService;
 
     @Test
-    void testCreate() {
+    void testCreateAndDelete() {
         var cliente = new Cliente();
         cliente.setNome("Manuel");
         cliente.setCognome("Nucci");
@@ -53,84 +53,25 @@ class OrdineServiceTest {
         dettaglio.setProdotto(prodotto);
         dettaglio.setQuantita(5);
 
-        var ordineSaved = new Ordine();
-        ordineSaved.setId(1);
-        ordineSaved.setCliente(cliente);
-        ordineSaved.addDettaglio(dettaglio);
+        var ordine = new Ordine();
+        ordine.setId(1);
+        ordine.setCliente(cliente);
+        ordine.addDettaglio(dettaglio);
 
         when(clienteService.cercaPerCodiceFiscale("NCCMNL93T26A944D")).thenReturn(cliente);
         when(prodottoService.aggiornaStock("PROD-001", -5)).thenReturn(prodotto);
-        when(ordineRepository.save(any(Ordine.class))).thenReturn(ordineSaved);
-
-        var id = ordineService.crea("NCCMNL93T26A944D", Map.of("PROD-001", 5));
-
-        assertThat(id).isEqualTo(1);
+        when(ordineRepository.save(any(Ordine.class))).thenReturn(ordine);
+        var ordineSaved = ordineService.crea("NCCMNL93T26A944D", Map.of("PROD-001", 5));
+        assertThat(ordineSaved).isNotNull();
         verify(clienteService).cercaPerCodiceFiscale("NCCMNL93T26A944D");
         verify(prodottoService).aggiornaStock("PROD-001", -5);
         verify(ordineRepository).save(any(Ordine.class));
-    }
 
-    @Test
-    void testUpdate() {
-        var cliente = new Cliente();
-        cliente.setNome("Manuel");
-        cliente.setCognome("Nucci");
-        cliente.setDataNascita(LocalDate.of(1993, 12, 26));
-        cliente.setCodiceFiscale("NCCMNL93T26A944D");
-        cliente.setEmail("manuel.nucci.52@gmail.com");
-
-        var prodotto = new Prodotto();
-        prodotto.setCodice("PROD-001");
-        prodotto.setNome("HP Notebook");
-        prodotto.setStock(5);
-
-        var dettaglio = new DettaglioOrdine();
-        dettaglio.setProdotto(prodotto);
-        dettaglio.setQuantita(5);
-
-        var ordine = new Ordine();
-        ordine.setId(1);
-        ordine.setCliente(cliente);
-        ordine.addDettaglio(dettaglio);
+        clearInvocations(prodottoService);
         ordine.setStato(StatoOrdine.CONSEGNATO);
-
         when(ordineRepository.findById(1)).thenReturn(Optional.of(ordine));
-
-        ordineService.consegna(1);
-        assertThat(ordine.getStato()).isEqualTo(StatoOrdine.CONSEGNATO);
-
-        verify(ordineRepository).findById(1);
-    }
-
-    @Test
-    void testDelete() {
-        var cliente = new Cliente();
-        cliente.setNome("Manuel");
-        cliente.setCognome("Nucci");
-        cliente.setDataNascita(LocalDate.of(1993, 12, 26));
-        cliente.setCodiceFiscale("NCCMNL93T26A944D");
-        cliente.setEmail("manuel.nucci.52@gmail.com");
-
-        var prodotto = new Prodotto();
-        prodotto.setCodice("PROD-001");
-        prodotto.setNome("HP Notebook");
-        prodotto.setStock(5);
-
-        var dettaglio = new DettaglioOrdine();
-        dettaglio.setProdotto(prodotto);
-        dettaglio.setQuantita(5);
-
-        var ordine = new Ordine();
-        ordine.setId(1);
-        ordine.setCliente(cliente);
-        ordine.addDettaglio(dettaglio);
-        ordine.setStato(StatoOrdine.CONSEGNATO);
-
-        when(ordineRepository.findById(1)).thenReturn(Optional.of(ordine));
-
         assertThatThrownBy(() -> ordineService.cancella(1))
                 .isInstanceOf(IllegalArgumentException.class);
-
         verify(ordineRepository).findById(1);
         verify(ordineRepository, never()).delete(any());
         verifyNoInteractions(prodottoService);

@@ -25,48 +25,29 @@ class ProdottoServiceTest {
     private ProdottoService prodottoService;
 
     @Test
-    void testCreate() {
+    void testCreateFindUpdate() {
         var prodotto = new Prodotto();
+        prodotto.setId(1);
         prodotto.setCodice("PROD-001");
         prodotto.setNome("HP Notebook");
         prodotto.setStock(10);
 
+        when(prodottoRepository.existsByCodice("PROD-001")).thenReturn(false);
         when(prodottoRepository.save(any(Prodotto.class))).thenReturn(prodotto);
-
         var prodottoSaved = prodottoService.crea(prodotto);
         assertThat(prodottoSaved).isNotNull();
-
+        verify(prodottoRepository).existsByCodice("PROD-001");
         verify(prodottoRepository).save(prodotto);
-    }
-
-    @Test
-    void testFind() {
-        var prodotto = new Prodotto();
-        prodotto.setCodice("PROD-001");
-        prodotto.setNome("HP Notebook");
-        prodotto.setStock(10);
 
         when(prodottoRepository.findByCodice("PROD-001")).thenReturn(Optional.of(prodotto));
-
         var prodottoPerCodice = prodottoService.cercaPerCodice("PROD-001");
         assertThat(prodottoPerCodice).isNotNull();
-
         verify(prodottoRepository).findByCodice("PROD-001");
-    }
-
-    @Test
-    void testUpdate() {
-        var prodotto = new Prodotto();
-        prodotto.setCodice("PROD-001");
-        prodotto.setNome("HP Notebook");
-        prodotto.setStock(10);
 
         when(prodottoRepository.findByCodiceWithLock("PROD-001")).thenReturn(Optional.of(prodotto));
-
         assertThatThrownBy(() ->
                 prodottoService.aggiornaStock("PROD-001", -15))
                 .isInstanceOf(IllegalArgumentException.class);
-
         verify(prodottoRepository).findByCodiceWithLock("PROD-001");
     }
 }

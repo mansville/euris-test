@@ -5,8 +5,9 @@ import it.mansville.euristest.dto.ClienteResponseDTO;
 import it.mansville.euristest.model.Cliente;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ClienteMapper {
     Cliente toEntity(ClienteRequestDTO clienteDTO);
 

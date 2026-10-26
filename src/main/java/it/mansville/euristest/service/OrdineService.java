@@ -47,7 +47,7 @@ public class OrdineService {
     }
 
     public Page<Ordine> listaConFiltro(String codiceFiscale, StatoOrdine stato, Pageable pageable) {
-        if (codiceFiscale.isBlank()) {
+        if (codiceFiscale == null || codiceFiscale.isBlank()) {
             return ordineRepository.findAll(pageable);
         }
         if (stato == null) {
@@ -77,7 +77,8 @@ public class OrdineService {
                         .formatted(ordineId)));
 
         if (StatoOrdine.CONSEGNATO.equals(ordine.getStato())) {
-            throw new IllegalArgumentException("Cancellazione fallita - Ordine %d già consegnato");
+            throw new IllegalArgumentException("Cancellazione fallita - Ordine %d già consegnato"
+                    .formatted(ordineId));
         }
 
         for (var dettaglio : ordine.getDettagli()) {
