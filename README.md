@@ -1,6 +1,6 @@
 # euris-test
 
-[![CI/CD Tests](https://github.com/mansville/euris-test/actions/workflows/ci-cd.yaml/badge.svg)](https://github.com/mansville/euris-test/actions/workflows/ci-cd.yaml)
+[![CI/CD Pipeline](https://github.com/mansville/euris-test/actions/workflows/ci-cd.yaml/badge.svg)](https://github.com/mansville/euris-test/actions/workflows/ci-cd.yaml)
 [![Latest Release](https://img.shields.io/github/v/release/mansville/euris-test?color=blue&label=Latest%20Release)](https://github.com/mansville/euris-test/releases/latest)
 ![Java 21](https://img.shields.io/badge/Java-21-orange.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-brightgreen.svg)
@@ -27,8 +27,8 @@ L'applicazione è sviluppata con **Java 21** e **Spring Boot 4.1.2** e adotta un
 
 ## ⚙️ Prerequisiti
 
-- **JRE / JDK 21+** installato sulla macchina
-- **Git** per clonare il repository (opzionale, solo in caso di non utilizzo del JAR precompilato nell'ultima versione rilasciata)
+- **JRE / JDK 21** installato sulla macchina
+- **Git** per clonare il repository (opzionale, solo in caso di non utilizzo del JAR precompilato relativo all'ultima versione rilasciata)
 - **PostgreSQL 18** o **Docker** (opzionale, solo per l'esecuzione con il profilo Spring `prod`)
 
 ---
@@ -77,15 +77,15 @@ Il progetto è già interamente predisposto per connettersi a un vero database d
 > [!NOTE]
 > La **pipeline CI/CD** di **GitHub Actions** (`ci-cd.yaml`) include già un service container attivo con PostgreSQL 18 durante l'esecuzione del workflow, garantendo che i test, le migrazioni e l'impacchettamento siano già verificati anche a fronte di un'istanza reale.
 
-In futuro, perciò, è già possibile eseguire o distribuire l'applicazione nelle seguenti modalità:
+È possibile testare l'applicazione in ambiente di produzione seguendo una delle seguenti modalità:
 
 ### 1. Avvio con PostgreSQL in Locale
 
-Avviare un'istanza di PostgreSQL (porta `5432`, database `euris`, username `test`, password `test`, interamente personalizzabile modificando il file `src/main/resources/application-prod.yaml`):
+Lanciare prima un'istanza di PostgreSQL (porta `5432`, database `euris`, username `test`, password `test`, interamente personalizzabile modificando il file `src/main/resources/application-prod.yaml`), poi avviare l'applicazione con il comando:
 ```bash
 java -jar target/app.jar --spring.profiles.active=prod
 ```
-Oppure sovrascrivere i parametri di connessione direttamente nel terminale usando le variabili d'ambiente:
+oppure sovrascrivere i parametri di connessione direttamente nel terminale usando le variabili d'ambiente:
 ```bash
 SPRING_PROFILES_ACTIVE=prod \
 SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/euris \
@@ -94,9 +94,9 @@ SPRING_DATASOURCE_PASSWORD=test \
 java -jar target/app.jar
 ```
 
-### 2. Avvio con Docker & Docker Compose
+### 2. Avvio con Docker Compose
 
-Creare gli opportuni file `Dockerfile` e `docker-compose.yaml`, sfruttando il profilo Spring `prod` per avviare l'intera infrastruttura (applicazione Spring + database PostgreSQL) con un singolo comando:
+Lanciare prima Docker (Linux: `dockerd`, macOS / Windows: `Docker Desktop`), poi aprire un terminale nella directory contenente il file `docker-compose.yaml` e lanciare il comando:
 ```bash
 docker compose up -d
 ```
@@ -114,4 +114,4 @@ Quando l'applicazione è in esecuzione con il profilo predefinito `dev`, sono ac
 | **Swagger UI**     | [`http://localhost:8080/swagger.html`](http://localhost:8080/swagger.html) | Interfaccia interattiva per esplorare e testare le API REST                                                           |
 
 > [!TIP]
-> Avviando con il profilo Spring `prod`, sia la console H2 sia OpenAPI / Swagger UI sono intenzionalmente disabilitati per rispettare la sicurezza degli ambienti di produzione.
+> Con il profilo Spring `prod`, sia la console H2 sia OpenAPI / Swagger UI sono intenzionalmente disabilitati per rispettare la sicurezza degli ambienti di produzione.

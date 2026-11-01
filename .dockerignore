@@ -1,0 +1,10 @@
+.github
+.idea
+target
+.dockerignore
+.gitattributes
+.gitignore
+docker-compose.yaml
+Dockerfile
+mvnw.cmd
+README.md
