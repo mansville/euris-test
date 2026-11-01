@@ -3,3 +3,6 @@ spring:
     name: euris-test
   profiles:
     active: dev
+  threads:
+    virtual:
+      enabled: true

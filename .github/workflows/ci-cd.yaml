@@ -36,9 +36,13 @@ jobs:
           cache: maven
       - name: Wrapper
         run: chmod +x mvnw
-      - name: Jar
+      - name: Prod Test
+        run: ./mvnw clean test -Dspring.profiles.active=prod
+      - name: Dev Jar
+        if: github.event_name == 'push'
         run: ./mvnw clean package
       - name: Upload
+        if: github.event_name == 'push'
         uses: actions/upload-artifact@v7
         with:
           name: artifact
@@ -46,7 +50,7 @@ jobs:
 
   github:
     name: Tag & Release
-    if: github.event_name == 'push' && github.ref_name == 'main'
+    if: github.event_name == 'push'
     needs: maven
     runs-on: ubuntu-22.04
 
@@ -76,3 +80,17 @@ jobs:
           tag_name: ${{ steps.tag.outputs.new_tag }}
           body: ${{ steps.tag.outputs.changelog }}
           files: dist/*
+      - name: GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Docker
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: |-
+            ghcr.io/mansville/euris-test:${{ steps.tag.outputs.new_tag }}
+            ghcr.io/mansville/euris-test:latest
