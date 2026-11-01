@@ -11,13 +11,13 @@ services:
     container_name: postgresql
     restart: unless-stopped
     networks: [ app-net ]
-    volumes: [ "pgdata:/var/lib/postgresql/data" ]
+    volumes: [ "pgdata:/var/lib/postgresql" ]
     environment:
       POSTGRES_DB: euris
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
       timeout: 5s
       interval: 10s
       retries: 3
