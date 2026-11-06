@@ -1,0 +1,44 @@
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  pgdata:
+
+services:
+  database:
+    image: postgres:18-alpine
+    container_name: postgresql
+    restart: unless-stopped
+    networks: [ app-net ]
+    volumes: [ "pgdata:/var/lib/postgresql" ]
+    environment:
+      POSTGRES_DB: euris
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      timeout: 5s
+      interval: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  app:
+    image: ghcr.io/mansville/euris-test:latest
+    container_name: euris-test
+    restart: unless-stopped
+    networks: [ app-net ]
+    ports: [ "8080:8080" ]
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/euris
+    depends_on:
+      database:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 1G
