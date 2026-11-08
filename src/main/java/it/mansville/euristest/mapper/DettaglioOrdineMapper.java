@@ -8,6 +8,7 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DettaglioOrdineMapper {
+    @SuppressWarnings("unused")
     @Mapping(target = "idProdotto", source = "prodotto.id")
     @Mapping(target = "codiceProdotto", source = "prodotto.codice")
     @Mapping(target = "nomeProdotto", source = "prodotto.nome")

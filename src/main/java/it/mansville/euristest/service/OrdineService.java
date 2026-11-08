@@ -1,5 +1,6 @@
 package it.mansville.euristest.service;
 
+import it.mansville.euristest.command.CreaOrdineCommand;
 import it.mansville.euristest.model.DettaglioOrdine;
 import it.mansville.euristest.model.Ordine;
 import it.mansville.euristest.model.type.StatoOrdine;
@@ -9,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,18 +22,18 @@ public class OrdineService {
     private final ProdottoService prodottoService;
 
     @Transactional
-    public Integer crea(String codiceFiscale, Map<String, Integer> codiciQuantita) {
+    public Integer crea(CreaOrdineCommand command) {
         var ordine = new Ordine();
-        var cliente = clienteService.cercaPerCodiceFiscale(codiceFiscale);
+        var cliente = clienteService.cercaPerCodiceFiscale(command.codiceFiscale());
 
         if (cliente == null) {
             throw new IllegalArgumentException("Creazione Ordine fallito - Cliente con CF %s non trovato"
-                    .formatted(codiceFiscale));
+                    .formatted(command.codiceFiscale()));
         }
 
         ordine.setCliente(cliente);
 
-        for (var cq : codiciQuantita.entrySet()) {
+        for (var cq : command.dettagli().entrySet()) {
             var dettaglio = new DettaglioOrdine();
             var prodotto = prodottoService.aggiornaStock(cq.getKey(), -cq.getValue());
 

@@ -2,7 +2,6 @@ package it.mansville.euristest.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import it.mansville.euristest.dto.DettaglioOrdineRequestDTO;
 import it.mansville.euristest.dto.OrdineRequestDTO;
 import it.mansville.euristest.dto.OrdineResponseDTO;
 import it.mansville.euristest.mapper.OrdineMapper;
@@ -19,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.Collectors;
-
 @Validated
 @RestController
 @RequiredArgsConstructor
@@ -34,15 +31,8 @@ public class OrdineController {
     @PostMapping
     @Operation(summary = "Crea un nuovo ordine, restituendo il suo id in caso di successo e aggiornando lo stock dei prodotti richiesti")
     public ResponseEntity<Integer> crea(@RequestBody @Valid OrdineRequestDTO ordineDTO) {
-        var dettagli = ordineDTO.dettagli()
-                .stream().collect(Collectors.toMap(
-                        DettaglioOrdineRequestDTO::codice,
-                        DettaglioOrdineRequestDTO::quantita,
-                        Integer::sum
-                ));
-
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ordineService.crea(ordineDTO.codiceFiscale(), dettagli));
+                ordineService.crea(ordineMapper.toCommand(ordineDTO)));
     }
 
     @GetMapping
