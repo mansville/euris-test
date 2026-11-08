@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @Setter
@@ -27,4 +29,21 @@ public class DettaglioOrdine {
 
     @Column(name = "QUANTITA")
     private Integer quantita;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof DettaglioOrdine other)) {
+            return false;
+        }
+
+        return Objects.equals(ordine, other.ordine) && Objects.equals(prodotto, other.prodotto);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ordine, prodotto);
+    }
 }
